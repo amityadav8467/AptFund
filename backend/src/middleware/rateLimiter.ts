@@ -5,5 +5,9 @@ export const contributionLimiter = rateLimit({
   limit: 5,
   standardHeaders: true,
   legacyHeaders: false,
-  keyGenerator: (req) => req.user?.id ?? req.ip ?? "unknown-ip"
+  keyGenerator: (req) => {
+    const forwardedFor = req.headers["x-forwarded-for"];
+    const forwardedIp = Array.isArray(forwardedFor) ? forwardedFor[0] : forwardedFor?.split(",")[0]?.trim();
+    return req.user?.id ?? forwardedIp ?? req.ip ?? req.socket.remoteAddress ?? `anon-${req.method}-${req.originalUrl}`;
+  }
 });

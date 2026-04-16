@@ -35,7 +35,7 @@ module AptFund::crowdfund {
         };
     }
 
-    public entry fun create_campaign(
+    public fun create_campaign(
         creator: &signer,
         title: vector<u8>,
         description: vector<u8>,
