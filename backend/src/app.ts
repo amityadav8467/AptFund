@@ -1,5 +1,6 @@
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import csurf from "csurf";
 import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
@@ -24,6 +25,25 @@ export const createApp = () => {
   app.use(cookieParser());
   app.use(express.json({ limit: "1mb" }));
   app.use(apiLimiter);
+  app.use(
+    csurf({
+      cookie: {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: env.nodeEnv === "production"
+      }
+    })
+  );
+
+  app.use((req, res, next) => {
+    if (req.method === "GET" || req.method === "HEAD" || req.method === "OPTIONS") {
+      res.cookie("csrf_token", req.csrfToken(), {
+        sameSite: "lax",
+        secure: env.nodeEnv === "production"
+      });
+    }
+    next();
+  });
 
   app.use("/auth", authRoutes);
   app.use("/campaigns", campaignRoutes);

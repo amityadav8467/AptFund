@@ -1,6 +1,6 @@
 module AptFund::identity {
+    use std::signer;
     use std::vector;
-    use aptos_framework::sha3_256;
 
     const E_REGISTRY_NOT_FOUND: u64 = 1;
     const E_INVALID_PROOF: u64 = 2;
@@ -18,8 +18,6 @@ module AptFund::identity {
 
     public entry fun verify_identity(user: &signer, zk_proof: vector<u8>) acquires IdentityRegistry {
         assert!(vector::length(&zk_proof) > 0, E_INVALID_PROOF);
-        let proof_hash = sha3_256::sha3_256(zk_proof);
-        assert!(vector::length(&proof_hash) == 32, E_INVALID_PROOF);
 
         let registry_address = @AptFund;
         assert!(exists<IdentityRegistry>(registry_address), E_REGISTRY_NOT_FOUND);

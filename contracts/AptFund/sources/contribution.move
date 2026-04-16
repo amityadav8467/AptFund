@@ -1,5 +1,7 @@
 module AptFund::contribution {
+    use std::signer;
     use std::vector;
+    use aptos_framework::account;
     use aptos_framework::coin;
     use aptos_framework::aptos_coin::AptosCoin;
     use aptos_framework::event;
