@@ -8,6 +8,7 @@ import campaignRoutes from "./routes/campaigns.js";
 import fundingRoutes from "./routes/funding.js";
 import refundRoutes from "./routes/refunds.js";
 import { env } from "./config/env.js";
+import { apiLimiter } from "./middleware/rateLimiter.js";
 
 export const createApp = () => {
   const app = express();
@@ -22,6 +23,7 @@ export const createApp = () => {
   app.use(morgan("dev"));
   app.use(cookieParser());
   app.use(express.json({ limit: "1mb" }));
+  app.use(apiLimiter);
 
   app.use("/auth", authRoutes);
   app.use("/campaigns", campaignRoutes);

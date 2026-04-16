@@ -14,7 +14,8 @@ export const useCampaignProgressWs = (campaignId: string | undefined) => {
         if (typeof payload.progress === "number") {
           setProgress(payload.progress);
         }
-      } catch {
+      } catch (error) {
+        console.error("Failed to parse campaign progress payload", error);
         setProgress(null);
       }
     };
